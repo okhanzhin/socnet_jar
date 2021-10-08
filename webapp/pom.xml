@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>social-network</artifactId>
+        <groupId>com.getjavajob.okhanzhin</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>webapp</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <start-class>com.getjavajob.training.okhanzhin.socialnetwork.webapp.Application</start-class>
+        <jetbrains-annotations-version>13.0</jetbrains-annotations-version>
+        <springboot-version>2.3.12.RELEASE</springboot-version>
+        <tomcat-version>9.0.52</tomcat-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.getjavajob.okhanzhin</groupId>
+            <artifactId>domain</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.getjavajob.okhanzhin</groupId>
+            <artifactId>dao</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.getjavajob.okhanzhin</groupId>
+            <artifactId>service</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains-annotations-version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--Embedded Tomcat-->
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-dbcp</artifactId>
+            <version>${tomcat-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>${springboot-version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-war-plugin</artifactId>-->
+<!--                <version>3.3.1</version>-->
+<!--                <configuration>-->
+<!--                    <webResources>-->
+<!--                        <resource>-->
+<!--                            &lt;!&ndash; this is relative to the pom.xml directory &ndash;&gt;-->
+<!--                            <directory>src</directory>-->
+<!--                        </resource>-->
+<!--                    </webResources>-->
+<!--                    <webXml>/Volumes/Library/dev/projects/docker-compose-network/social-network/webapp/src/main/webapp/WEB-INF/web.xml</webXml>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springboot-version}</version>
+                <configuration>
+                    <fork>false</fork>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.heroku</groupId>
+                                    <artifactId>webapp-runner</artifactId>
+                                    <version>9.0.41.0</version>
+                                    <destFileName>webapp-runner.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.tomcat</groupId>
+                                    <artifactId>tomcat-dbcp</artifactId>
+                                    <version>9.0.29</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.heroku.sdk</groupId>
+                <artifactId>heroku-maven-plugin</artifactId>
+                <version>3.0.4</version>
+                <configuration>
+                    <processTypes>
+                        <!--  @formatter:off-->
+                        <web>java $JAVA_OPTS -cp target/dependency/webapp-runner.jar:target/dependency/tomcat-dbcp.jar webapp.runner.launch.Main --enable-naming --context-xml target/webapp-1.0-SNAPSHOT/META-INF/context.xml $WEBAPP_RUNNER_OPTS --port $PORT target/webapp-1.0-SNAPSHOT.war</web>
+                        <!--@formatter:on-->
+                    </processTypes>
+                    <appName>okhanzhin-network</appName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
