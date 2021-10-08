@@ -32,7 +32,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
             request.setAttribute(ERROR, "Failed to log in. Invalid Log/Password.");
         }
         request.setAttribute(EMAIL, request.getParameter(EMAIL));
-        request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+        request.getRequestDispatcher("WEB-INF/jsp/log.jsp").forward(request, response);
     }
 
     private Throwable findCause(Throwable throwable) {

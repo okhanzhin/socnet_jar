@@ -6,7 +6,7 @@
     <jsp:param name="pageTitle" value="Profile"/>
 </jsp:include>
 
-<%@include file="/WEB-INF/jsp/templates/navbar.jsp" %>
+<%@include file="/WEB-INF/jsp/templates/navbar.jspnavbar.jsp" %>
 
 <div class="container">
     <div class="row justify-content-center">

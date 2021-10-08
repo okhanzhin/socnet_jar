@@ -49,7 +49,7 @@ public class AccountAvailableValidationFilter extends GenericFilterBean {
                 isAccountAvailable = accountService.isAccountAvailable(authentication.getName());
             }
 
-            logger.info("Is account Available: " + isAccountAvailable);
+            logger.info("Is account Available: {}", isAccountAvailable);
 
             if (isAccountAvailable) {
                 filterChain.doFilter(req, resp);
