@@ -3,7 +3,9 @@
  import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.ContextResource;
-import org.springframework.beans.factory.annotation.Value;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.boot.web.server.ConfigurableWebServerFactory;
@@ -19,8 +21,6 @@ import java.io.File;
 
  @Configuration
 public class TomcatConfig {
-    @Value("${server.tomcat.basedir}")
-    String documentRoot;
     @Value("${spring.datasource.jndi-name}")
     String jndiName;
     @Value("${spring.datasource.tomcat.data-source-j-n-d-i}")
@@ -40,6 +40,8 @@ public class TomcatConfig {
     @Value("${spring.datasource.tomcat.max-wait}")
     String maxWaitMillis;
 
+    static Logger log = LoggerFactory.getLogger(TomcatConfig.class);
+
     @Bean
     public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
         return new WebServerFactoryCustomizer<ConfigurableWebServerFactory>() {
@@ -47,10 +49,15 @@ public class TomcatConfig {
             public void customize(ConfigurableWebServerFactory factory) {
                 if (factory instanceof TomcatServletWebServerFactory) {
                     TomcatServletWebServerFactory tomcat = (TomcatServletWebServerFactory) factory;
-                    if (!StringUtils.isEmpty(documentRoot)) {
-                        File root = new File(documentRoot);
-                        tomcat.setDocumentRoot(root);
-                    }
+//                    if (!StringUtils.isEmpty(documentRoot)) {
+//                        File root = new File(documentRoot);
+//                        tomcat.setDocumentRoot(root);
+//                    }
+//                    String path = TomcatConfig.class.getResource("/").getFile();
+//
+//                    log.warn("path = {}", path);
+//
+//                    tomcat.setDocumentRoot(new File(path));
                 }
             }
         };
