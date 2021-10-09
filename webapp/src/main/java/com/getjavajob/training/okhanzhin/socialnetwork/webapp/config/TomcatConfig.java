@@ -49,15 +49,10 @@ public class TomcatConfig {
             public void customize(ConfigurableWebServerFactory factory) {
                 if (factory instanceof TomcatServletWebServerFactory) {
                     TomcatServletWebServerFactory tomcat = (TomcatServletWebServerFactory) factory;
-//                    if (!StringUtils.isEmpty(documentRoot)) {
-//                        File root = new File(documentRoot);
-//                        tomcat.setDocumentRoot(root);
-//                    }
-//                    String path = TomcatConfig.class.getResource("/").getFile();
-//
-//                    log.warn("path = {}", path);
-//
-//                    tomcat.setDocumentRoot(new File(path));
+                    String pathToWebapp;
+                    if ((pathToWebapp = System.getProperty("WEBAPP_DIR")) != null) {
+                        tomcat.setDocumentRoot(new File(pathToWebapp));
+                    }
                 }
             }
         };
